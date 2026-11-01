@@ -1,8 +1,16 @@
-# Projekt jest już wgrany — pozostała konfiguracja Telegrama
+# Monitor jest skonfigurowany i uruchomiony
 
 Repozytorium: https://github.com/MyThZPlayerNet/omtech-price-bot
 
-**Nie musisz ponownie dodawać plików.** Wszystkie 41 testów przeszło na GitHubie. Sklep został sprawdzony z serwera GitHuba: wskazany wariant kosztował 699,99 EUR i był dostępny 1 listopada 2026 o 19:43 czasu polskiego.
+**Nie musisz ponownie dodawać plików ani sekretów.** Wszystkie 41 testów przeszło na GitHubie. Prawdziwy test Telegrama i pierwszy pomiar z zapisem historii zakończyły się sukcesem. Wskazany wariant kosztował **699,99 EUR** i był dostępny **1 listopada 2026 o 19:51 czasu polskiego**. Telegram potwierdził przyjęcie wiadomości testowej i inicjalizacyjnej.
+
+- Historia: https://github.com/MyThZPlayerNet/omtech-price-bot/blob/main/data/price_history.csv
+- Monitor: https://github.com/MyThZPlayerNet/omtech-price-bot/actions/workflows/check-price.yml
+- Cena alarmowa: **650 EUR** w config.json.
+- Zatrzymanie: powyższa strona monitora → menu ⋯ → **Disable workflow**.
+- Harmonogram: co 2 godziny, minuta 17 UTC; następny planowany termin **1 listopada 2026 około 21:17 czasu polskiego**. Możliwe są opóźnienia GitHuba; pierwszego wyzwolenia schedule jeszcze nie obserwowano.
+
+Poniższe kroki pozostawiono na potrzeby ponownej konfiguracji, np. po zmianie tokenu. Nie wykonuj ich ponownie bez potrzeby.
 
 1. Otwórz https://t.me/BotFather, kliknij Start i wyślij `/newbot`. Podaj nazwę i unikalny username zakończony `bot`. BotFather pokaże token — nie wysyłaj go asystentowi.
 2. Otwórz nowego bota przez link z BotFather i kliknij **Start**.

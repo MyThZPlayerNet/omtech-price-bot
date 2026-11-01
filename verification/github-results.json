@@ -17,7 +17,13 @@
     "available": true,
     "variant_title": "Maschine + 6 Acrylplatten geschenkt / Ohne LightBurn"
   },
-  "telegram_real_delivery_tested": false,
-  "production_history_commit_tested": false,
+  "telegram_real_delivery_tested": true,
+  "telegram_test_run_url": "https://github.com/MyThZPlayerNet/omtech-price-bot/actions/runs/41338660628",
+  "production_check_run_url": "https://github.com/MyThZPlayerNet/omtech-price-bot/actions/runs/41338710878",
+  "second_check_run_url": "https://github.com/MyThZPlayerNet/omtech-price-bot/actions/runs/41338777155",
+  "production_history_commit_tested": true,
+  "observations_confirmed": 2,
+  "unchanged_price_duplicate_alerts": 0,
+  "production_data_commit": "bd78a016b6070f8e5593cc45a13124bfb301c6d1",
   "scheduled_execution_observed": false
 }

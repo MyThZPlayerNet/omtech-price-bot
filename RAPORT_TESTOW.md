@@ -10,7 +10,7 @@
 | Rzeczywisty odczyt gotowym skryptem | **OK**, 01.11.2026 19:34:18 czasu polskiego (18:34:18 UTC) |
 | Cena i wariant | **699,99 EUR**, `43552694304950`, dostępny, „Maschine + 6 Acrylplatten geschenkt / Ohne LightBurn” |
 | Dwa testy integracji Git w lokalnym Windows | **Nie zaliczone z powodu ograniczenia środowiska**, przed właściwym testem zapisu |
-| Wysyłka do rzeczywistego Telegrama użytkownika | **Niewykonana**, brak skonfigurowanych sekretów |
+| Wysyłka do rzeczywistego Telegrama użytkownika | **OK**, test API Telegrama i wiadomość inicjalizacyjna po dodaniu Secrets |
 
 Lokalne testy Git nie przeszły etapu utworzenia klona repozytorium testowego: Git for Windows nie mógł uruchomić procesu powłoki MSYS (`NtCreateDirectoryObject`, `0xC0000022`). Następnie te same testy **przeszły na Ubuntu w GitHub Actions** — szczegóły poniżej.
 
@@ -26,7 +26,17 @@ Lokalne testy Git nie przeszły etapu utworzenia klona repozytorium testowego: G
 - Rzeczywisty odczyt z serwera GitHuba: **01.11.2026 19:43:57 czasu polskiego**, cena **699,99 EUR**, dostępny, dokładny wariant `43552694304950`.
 - Krok pobierania ceny ma własny wynik **success**; nie wnioskujemy tego tylko z zielonego całego zadania, bo odczyt kontrolny ma continue-on-error.
 
-To potwierdza działanie kodu i dostępu do sklepu z runnera. Nie zastępuje testu wysyłki na rzeczywisty Telegram ani produkcyjnego zapisu danych przez GITHUB_TOKEN.
+## Rzeczywiste uruchomienie Telegrama i zapisu historii
+
+Użytkownik samodzielnie dodał `TELEGRAM_BOT_TOKEN` i `TELEGRAM_CHAT_ID` w GitHub Secrets. Asystent sprawdził wyłącznie obecność nazw; nie odczytywał wartości.
+
+- [Test Telegrama — Success](https://github.com/MyThZPlayerNet/omtech-price-bot/actions/runs/41338660628): 1 listopada 2026 o 19:50 czasu polskiego API potwierdziło wysłanie wiadomości testowej. W tym samym zadaniu ponownie przeszło 41 testów.
+- [Pierwszy produkcyjny pomiar — Success](https://github.com/MyThZPlayerNet/omtech-price-bot/actions/runs/41338710878): 19:51:09 czasu polskiego, **699,99 EUR**, dostępny, dokładny wariant `43552694304950`.
+- Prawdziwa obserwacja i kolejka zostały zapisane przez `GITHUB_TOKEN` do `data/store.json` i `data/price_history.csv` przed wysyłką. Następnie wysłano wiadomość inicjalizacyjną i zapisano status `sent` z identyfikatorem potwierdzonym przez Telegram.
+- Odczytano pliki z GitHuba po zakończeniu zadania, potwierdzając trwałość ceny i statusu wysyłki. To sprawdzenie obejmuje produkcyjny zapis do GitHuba, nie tylko bare remote użyte w testach.
+- [Drugi produkcyjny pomiar — Success](https://github.com/MyThZPlayerNet/omtech-price-bot/actions/runs/41338777155): 19:51:58 czasu polskiego, ta sama cena 699,99 EUR. Potwierdzono dwie obserwacje w historii, a w kolejce nadal tylko jedną wiadomość inicjalizacyjną o statusie sent. Brak nowego alertu przy niezmienionej cenie sprawdzono między dwoma osobnymi uruchomieniami Actions.
+
+Potwierdzenie API oznacza, że Telegram przyjął wiadomość do wskazanego czatu. Nie sprawdzano, czy użytkownik osobiście ją przeczytał.
 
 ## Zakres 39 zaliczonych testów
 
@@ -48,6 +58,8 @@ Do odtworzenia: `python -m unittest discover -s tests -v`, `python monitor.py --
 
 Repozytorium wskazane przez użytkownika: https://github.com/MyThZPlayerNet/omtech-price-bot (widoczność Public w momencie sprawdzenia). **Kod, workflow i dokumentacja zostały wgrane do main; Actions są aktywne.** Harmonogram zapisano jako `17 */2 * * *` (UTC).
 
-W ustawieniach GitHub potwierdzono jeszcze brak sekretów Telegrama. Nie wykonano prawdziwego testu wiadomości, pierwszego produkcyjnego `check` ani obserwacji późniejszego uruchomienia schedule. Nie zapisano sztucznych danych w katalogu data/.
+**Sekrety są dodane, test Telegrama oraz pierwszy produkcyjny check zakończyły się powodzeniem.** Historia zawiera rzeczywiste odczyty; nie zapisano sztucznych cen.
 
-Końcowa akceptacja działania wymaga: zielonego testu online, poprawnego odczytu z GitHuba, odebrania rzeczywistej wiadomości testowej, pierwszego `check` z zapisem danych i co najmniej jednej późniejszej kontroli wyzwolonej harmonogramem. Samo istnienie plików workflow tego nie dowodzi.
+Do końcowego ZIP-a dołączono kopię dwóch rzeczywistych odczytów i stanu wysyłki z repozytorium. To migawka z momentu przygotowania paczki; aktualna historia będzie rosła na GitHubie. Kopia nie zawiera tokenu ani identyfikatora prywatnego czatu.
+
+Harmonogram jest aktywny, ale nie obserwowano jeszcze pierwszego uruchomienia wyzwolonego przez `schedule`. Następny termin według cron to **1 listopada 2026 około 21:17 czasu polskiego**, z możliwym opóźnieniem lub pominięciem przez GitHub. Weryfikacja ręcznych uruchomień nie jest dowodem punktualności przyszłego harmonogramu.

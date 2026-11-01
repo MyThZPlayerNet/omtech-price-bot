@@ -63,6 +63,8 @@ Token jest hasłem do bota. **Nie wklejaj go do rozmowy z asystentem, kodu, issu
 
 Do paczki dołączony jest mały pomocnik Windows. Token wprowadzasz lokalnie w ukrytym polu; skrypt nie zapisuje go do pliku ani nie wypisuje. Nie korzysta z zewnętrznych botów do odczytywania ID.
 
+**Najłatwiej:** po rozpakowaniu całej paczki kliknij dwukrotnie `KONFIGURUJ_TELEGRAM.cmd` w folderze projektu. Otworzy pomocnika we właściwym folderze. Następnie przejdź do kroku 4 poniżej. Jeśli korzystasz wyłącznie ze strony GitHuba, najpierw wybierz **Code → Download ZIP** i rozpakuj ZIP na komputerze — sam widok pliku w przeglądarce nie tworzy pliku lokalnego.
+
 1. W Eksploratorze plików otwórz rozpakowany folder `omtech-price-bot` (ten z `monitor.py`).
 2. Kliknij pasek adresu folderu, wpisz `powershell` i naciśnij Enter. Otworzy się okno PowerShell w tym folderze.
 3. Wpisz dokładnie poniższe polecenie i naciśnij Enter:
@@ -72,6 +74,8 @@ Do paczki dołączony jest mały pomocnik Windows. Token wprowadzasz lokalnie w 
    ```
 
    Zezwolenie na wykonanie dotyczy tylko tego uruchomienia; polecenie nie zmienia systemowej polityki skryptów.
+
+   Jeśli pojawi się „the argument ... does not exist”, PowerShell jest w niewłaściwym folderze. Użyj powyższego pliku `KONFIGURUJ_TELEGRAM.cmd` albo podaj po `-File` pełną ścieżkę do rozpakowanego `scripts\telegram-chat-id.ps1` w cudzysłowie.
 
 4. Gdy zobaczysz `Wklej token z BotFather`, wklej token bezpośrednio z BotFather i naciśnij Enter. Znaki są ukryte. Nie wpisuj tokenu jako osobnego polecenia PowerShell.
 5. Skrypt pokaże username potwierdzonego bota i jednorazowy tekst, np. `/setup_a1b2c3d4e5`.

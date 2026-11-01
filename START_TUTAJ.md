@@ -6,7 +6,7 @@ Repozytorium: https://github.com/MyThZPlayerNet/omtech-price-bot
 
 1. Otwórz https://t.me/BotFather, kliknij Start i wyślij `/newbot`. Podaj nazwę i unikalny username zakończony `bot`. BotFather pokaże token — nie wysyłaj go asystentowi.
 2. Otwórz nowego bota przez link z BotFather i kliknij **Start**.
-3. Uzyskaj Chat ID pomocnikiem `scripts/telegram-chat-id.ps1`. Dokładnie opisuje to **punkt 5 w README.md**. Token wpisujesz lokalnie, w ukrytym polu PowerShell; pomocnik nie zapisuje go do pliku.
+3. Pobierz i rozpakuj całą paczkę na komputerze. Kliknij dwukrotnie **KONFIGURUJ_TELEGRAM.cmd**, aby uzyskać Chat ID. Dokładnie opisuje to **punkt 5 w README.md**. Token wpisujesz lokalnie, w ukrytym polu PowerShell; pomocnik nie zapisuje go do pliku. Samo otwarcie README na GitHubie nie pobiera skryptów na komputer.
 4. Otwórz https://github.com/MyThZPlayerNet/omtech-price-bot/settings/secrets/actions. Kliknij **New repository secret**. Dodaj osobno `TELEGRAM_BOT_TOKEN` (wartość skopiowana bezpośrednio z BotFather) i `TELEGRAM_CHAT_ID` (liczba z pomocnika).
 5. Otwórz https://github.com/MyThZPlayerNet/omtech-price-bot/actions/workflows/check-price.yml. Kliknij **Run workflow**, wybierz **main**, **mode: test**, pozostaw alert_id puste i kliknij zielone **Run workflow**. Oczekiwany wynik: wiadomość testowa na Telegramie i zielony wynik w Actions.
 6. Powtórz z **mode: check**. Powinien pojawić się pierwszy wiersz w `data/price_history.csv`, plik `data/store.json` i wiadomość z ceną. Potem monitor działa z harmonogramu co 2 godziny, z możliwymi opóźnieniami GitHuba.

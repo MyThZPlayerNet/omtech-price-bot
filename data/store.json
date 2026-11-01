@@ -14,8 +14,10 @@
   "outbox": [
     {
       "id": "9a706306ca736e2f",
-      "status": "pending",
-      "text": "✅ Monitoring OMTech K40 uruchomiony\nPomiar: 2026-11-01T18:51:09+00:00\nWariant: 43552694304950\nPierwszy poprawny odczyt — brak poprzedniej ceny.\nAktualna cena: 699,99 EUR\nStatus: Dostępny\nhttps://de.omtech.com/products/k40-lasercutter-graviermaschine?variant=43552694304950\nID alertu: 9a706306ca736e2f"
+      "status": "sent",
+      "text": "✅ Monitoring OMTech K40 uruchomiony\nPomiar: 2026-11-01T18:51:09+00:00\nWariant: 43552694304950\nPierwszy poprawny odczyt — brak poprzedniej ceny.\nAktualna cena: 699,99 EUR\nStatus: Dostępny\nhttps://de.omtech.com/products/k40-lasercutter-graviermaschine?variant=43552694304950\nID alertu: 9a706306ca736e2f",
+      "telegram_message_id": 4,
+      "sent_at_utc": "2026-11-01T18:51:10+00:00"
     }
   ]
 }

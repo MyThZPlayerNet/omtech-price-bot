@@ -1,6 +1,6 @@
 # OMTech K40 — instrukcja po polsku
 
-Gotowy monitor ceny konkretnego wariantu `43552694304950` w niemieckim sklepie OMTech. Działa w Pythonie 3.12, bez dodatkowych bibliotek. GitHub Actions uruchamia go co 2 godziny, więc komputer może być wyłączony.
+Gotowy monitor ceny konkretnego wariantu `43552694304950` w niemieckim sklepie OMTech. Działa w Pythonie 3.12, bez dodatkowych bibliotek. GitHub Actions uruchamia go co 10 minut, więc komputer może być wyłączony.
 
 **Zacznij od punktu 1. Nie potrzebujesz instalować Pythona na komputerze.** Jeżeli projekt został już wgrany do Twojego repozytorium, przejdź do punktu 4.
 
@@ -113,10 +113,10 @@ W repozytorium przejdź do **Actions → Monitor OMTech K40 → Run workflow**. 
 3. Ponownie **Run workflow**, tym razem **mode: test**. Sukces: zielony wynik oraz wiadomość `TEST OMTech K40: Telegram działa` w Twoim Telegramie. Test nie zapisuje fikcyjnej ceny.
 4. Ponownie **Run workflow**, wybierz **mode: check**. Sukces: powstają `data/store.json` i `data/price_history.csv`. Pierwszy odczyt ustala cenę początkową **bez wiadomości**. Kolejne odczyty wysyłają wiadomość wyłącznie po zmianie ceny.
 5. Uruchom `check` ponownie. Przy tej samej cenie nie powinno być drugiego alertu; w CSV powinien pojawić się drugi pomiar.
-6. Harmonogram działa automatycznie: `17 */2 * * *`, czyli o minucie 17 co drugą godzinę UTC. W Polsce zimą to ok. 01:17, 03:17 itd., latem ok. 02:17, 04:17 itd.
+6. Harmonogram działa automatycznie: `7,17,27,37,47,57 * * * *`, czyli w minutach 07, 17, 27, 37, 47 i 57 każdej godziny. Jest to sprawdzanie co 10 minut; zmiana czasu w Polsce nie zmienia tego odstępu.
 7. Po kilku godzinach sprawdź, czy pojawiło się uruchomienie z przyczyną **schedule** oraz kolejny wiersz historii. Dopiero to potwierdza automatyczną pracę.
 
-GitHub może opóźnić lub pominąć uruchomienie. To harmonogram orientacyjny, bez gwarancji dokładnie 120 minut. Bot zapisuje rzeczywisty czas pomiaru w UTC i nie wymyśla odczytów z pominiętych godzin.
+GitHub może opóźnić lub pominąć uruchomienie. To harmonogram orientacyjny, bez gwarancji dokładnie 10 minut ani wykrycia każdej krótkiej promocji. Bot zapisuje rzeczywisty czas pomiaru w UTC i nie wymyśla pominiętych odczytów.
 
 ## 9. Jak zmienić cenę alarmową
 
@@ -174,7 +174,7 @@ Jeśli zapis po wysyłce zawiedzie, **przed kolejnym `check` wstrzymaj workflow*
 
 ## Koszty i ograniczenia
 
-Projekt nie potrzebuje płatnych usług ani stale włączonego PC. Dla prywatnego repozytorium Actions zużywa bezpłatną pulę planu; inne Twoje projekty również mogą ją zużywać. Orientacyjnie to 360–372 krótkie kontrole miesięcznie, ale nie jest to gwarancja zmieszczenia się w limicie. W ustawieniach konta sprawdź **Billing and licensing / Billing and plans → Usage / Budgets and alerts**. Nie włączaj płatnego przekroczenia limitu. Projekt nie aktywuje płatności. Artefakty są tworzone tylko po awarii i wygasają po 7 dniach; trwała historia jest w Git.
+Projekt nie potrzebuje płatnych usług ani stale włączonego PC. Przy kontroli co 10 minut to 144 uruchomienia dziennie, czyli około 4320–4464 miesięcznie. Standardowe runnery publicznego repozytorium są bezpłatne. Dla prywatnego repozytorium Actions zużywa pulę planu i przy takiej częstotliwości można ją przekroczyć; inne Twoje projekty również ją zużywają. W ustawieniach konta sprawdź **Billing and licensing / Billing and plans → Usage / Budgets and alerts**. Nie włączaj płatnego przekroczenia limitu. Projekt nie aktywuje płatności. Artefakty są tworzone tylko po awarii i wygasają po 7 dniach; trwała historia jest w Git.
 
 W publicznych repozytoriach standardowe runnery Actions są bezpłatne, lecz kod i historia byłyby widoczne publicznie. Zalecane jest prywatne repozytorium. GitHub opisuje także automatyczne wyłączanie harmonogramów publicznych repozytoriów po 60 dniach braku aktywności. Regularnie kontroluj, czy harmonogram działa; sam kod nie gwarantuje ciągłości usługi.
 

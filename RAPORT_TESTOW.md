@@ -1,5 +1,11 @@
 # Raport weryfikacji — 1 listopada 2026
 
+## Aktualizacja: wiadomości tylko po zmianie ceny
+
+Na późniejsze życzenie użytkownika bot zawiadamia o każdej rzeczywistej zmianie ceny (spadku lub wzroście, również poniżej 5%). Pierwszy odczyt, ta sama cena, sama zmiana dostępności lub progów nie tworzą wiadomości. Progi 5% i 650 EUR jedynie wyróżniają promocje. Ręczny tryb test pozostaje dostępny na żądanie.
+
+Po zmianie lokalnie przeszło 39 testów, w tym cicha inicjalizacja, cicha zmiana konfiguracji i dostępności oraz powiadomienie o wzroście. Wynik zapisano w `verification/price-change-tests.txt`. Poniższe wcześniejsze wiadomości inicjalizacyjne są historycznymi dowodami pierwszego wdrożenia; nowa wersja ich nie generuje.
+
 ## Wykonane lokalnie
 
 | Kontrola | Wynik |

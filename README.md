@@ -8,8 +8,8 @@ Gotowy monitor ceny konkretnego wariantu `43552694304950` w niemieckim sklepie O
 
 - Cena w EUR z publicznego API Shopify, wybór wyłącznie podanego ID wariantu.
 - Kontrola waluty sesji przez `/cart.js`, we wspólnej sesji z zapytaniem o produkt.
-- Obniżka co najmniej 5% względem **poprzedniego poprawnego odczytu**.
-- Domyślna cena alarmowa **650 EUR**. Możesz ją zmienić lub wyłączyć.
+- Powiadomienie wyłącznie przy **zmianie ceny** względem poprzedniego poprawnego odczytu — również o 1 cent i również przy wzroście.
+- Progi **5%** i **650 EUR** wyróżniają promocję w treści wiadomości; nie ograniczają powiadomień o pozostałych zmianach ceny.
 - Historia każdego udanego odczytu w `data/price_history.csv`.
 - Trwały stan i kolejka wiadomości w `data/store.json`, zapisywane jako commity Git.
 - Telegram, test konfiguracji, ochrona przed zwykłym powtarzaniem alertów.
@@ -111,7 +111,7 @@ W repozytorium przejdź do **Actions → Monitor OMTech K40 → Run workflow**. 
 1. W polu **mode** wybierz `fetch`. Pozostaw **alert_id** puste. Kliknij zielone **Run workflow**.
 2. Otwórz nowe uruchomienie → zadanie **monitor** → krok **Rzeczywisty odczyt bez zapisu i bez Telegrama**. Sukces: zielony wynik, `variant_id` równe `43552694304950`, `currency` równe `EUR`, dodatnia cena. Ten test sprawdza dostęp sklepu **z serwera GitHuba**.
 3. Ponownie **Run workflow**, tym razem **mode: test**. Sukces: zielony wynik oraz wiadomość `TEST OMTech K40: Telegram działa` w Twoim Telegramie. Test nie zapisuje fikcyjnej ceny.
-4. Ponownie **Run workflow**, wybierz **mode: check**. Sukces: powstają `data/store.json` i `data/price_history.csv`; dostajesz wiadomość uruchomienia z ceną. Jeśli już spełniony jest próg 650 EUR, dostaniesz zamiast niej alert cenowy.
+4. Ponownie **Run workflow**, wybierz **mode: check**. Sukces: powstają `data/store.json` i `data/price_history.csv`. Pierwszy odczyt ustala cenę początkową **bez wiadomości**. Kolejne odczyty wysyłają wiadomość wyłącznie po zmianie ceny.
 5. Uruchom `check` ponownie. Przy tej samej cenie nie powinno być drugiego alertu; w CSV powinien pojawić się drugi pomiar.
 6. Harmonogram działa automatycznie: `17 */2 * * *`, czyli o minucie 17 co drugą godzinę UTC. W Polsce zimą to ok. 01:17, 03:17 itd., latem ok. 02:17, 04:17 itd.
 7. Po kilku godzinach sprawdź, czy pojawiło się uruchomienie z przyczyną **schedule** oraz kolejny wiersz historii. Dopiero to potwierdza automatyczną pracę.
@@ -123,19 +123,20 @@ GitHub może opóźnić lub pominąć uruchomienie. To harmonogram orientacyjny,
 1. **Code → config.json → ikona ołówka**.
 2. Zmień tylko wartość w `"target_price_eur": "650"`, np. na `"600"` albo `"649.99"`. Zostaw cudzysłowy i poprawne przecinki JSON.
 3. Kliknij **Commit changes**, zapisz do `main`.
-4. Uruchom `check` ręcznie lub poczekaj na harmonogram. Jeśli zmieniony próg jest spełniony, bot wyśle alert.
+4. Uruchom `check` ręcznie lub poczekaj na harmonogram. Sama zmiana progu nie wysyła wiadomości. Próg zostanie uwzględniony przy następnej rzeczywistej zmianie ceny.
 
-Aby wyłączyć próg kwotowy, wpisz `"target_price_eur": ""`. Reguła spadku 5% nadal działa. `price_drop_percent` domyślnie wynosi `"5"`; nie trzeba go zmieniać.
+Aby wyłączyć oznaczenie progu kwotowego, wpisz `"target_price_eur": ""`. `price_drop_percent` domyślnie wynosi `"5"`. Te ustawienia służą wyłącznie wyróżnianiu promocji w wiadomości; bot zawiadamia o każdej zmianie ceny.
 
 Zasady alertów:
 
-- 800 → 760 EUR: alert, bo spadek wynosi dokładnie 5%.
-- 800 → 770 → 740 EUR: bez alertu procentowego, bo żaden pojedynczy spadek nie osiąga 5%. Próg 650 EUR jest osobnym warunkiem.
-- Stała cena poniżej progu: jeden alert. Dalsza niższa cena poniżej progu: nowy alert. Sam wzrost nadal poniżej progu nie alarmuje.
-- Powrót ceny ponad próg, a potem ponowne zejście do niego: nowy alert.
-- Powrót dostępności przy cenie spełniającej próg: nowy alert.
-- Spadek co najmniej 5% powoduje alert także przy niedostępności, z wyraźnym statusem **Niedostępny**. Bot monitoruje każdą taką obniżkę.
-- Cena przekreślona przez sklep nie jest podstawą alertu. Pierwszy odczyt nie udaje obniżki względem nieznanej poprzedniej ceny.
+- Każda różnica ceny: jedna wiadomość z poprzednią i aktualną ceną, kierunkiem zmiany i procentem.
+- 800 → 760 EUR: wiadomość wyróżniona jako promocja, ponieważ spadek wynosi 5%.
+- 800 → 770 → 740 EUR: dwie wiadomości o zmianie ceny, każda z porównaniem do poprzedniego pomiaru.
+- 699,99 → 700,00 EUR: jedna wiadomość o wzroście; ponowny odczyt 700,00 EUR jest cichy.
+- Stała cena, nawet poniżej progu: brak wiadomości. Sama zmiana dostępności lub konfiguracji: brak wiadomości.
+- Pierwszy odczyt i ponowne uruchomienie przy tej samej cenie: brak automatycznej wiadomości.
+- Zmiana ceny przy niedostępności też jest zgłaszana, z wyraźnym statusem **Niedostępny**.
+- Ręcznie wybrany tryb `test` nadal wysyła wiadomość testową na wyraźne żądanie. Harmonogram korzysta z `check`, więc nie uruchamia testów Telegrama.
 
 ## 10. Historia i bieżący stan
 

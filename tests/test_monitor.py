@@ -65,10 +65,9 @@ class MonitorTests(unittest.TestCase):
         with self.assertRaises(m.MonitorError):
             m.parse_offer(payload, "EUR")
 
-    def test_initialization_is_not_promotion(self):
+    def test_initialization_is_silent(self):
         store = self.record(79900)
-        self.assertIn("Monitoring", store["outbox"][0]["text"])
-        self.assertNotIn("PROMOCJA", store["outbox"][0]["text"])
+        self.assertEqual(store["outbox"], [])
 
     def test_exact_five_percent(self):
         self.record(80000)
@@ -78,23 +77,32 @@ class MonitorTests(unittest.TestCase):
 
     def test_below_five_percent(self):
         self.record(80000)
-        self.assertEqual(len(self.record(76001)["outbox"]), 1)
+        event = self.record(76001)["outbox"][0]
+        self.assertIn("ZMIANA CENY", event["text"])
+        self.assertNotIn("PROMOCJA", event["text"])
 
     def test_previous_observation_not_high_water_mark(self):
         self.record(80000)
         self.record(77000)
-        self.assertEqual(len(self.record(74000)["outbox"]), 1)
+        store = self.record(74000)
+        self.assertEqual(len(store["outbox"]), 2)
+        self.assertIn("Poprzednia cena: 770,00 EUR", store["outbox"][-1]["text"])
+        self.assertIn("Obniżka: 3,9%", store["outbox"][-1]["text"])
 
     def test_each_qualifying_drop(self):
         self.record(80000)
         self.record(76000)
-        self.assertEqual(len(self.record(72200)["outbox"]), 3)
+        self.assertEqual(len(self.record(72200)["outbox"]), 2)
 
-    def test_same_price_and_increase_no_duplicate(self):
+    def test_same_price_silent_and_increase_alerts_once(self):
         self.record(80000)
         self.record(76000)
         self.record(76000)
-        self.assertEqual(len(self.record(77000)["outbox"]), 2)
+        self.assertEqual(len(self.record(76000)["outbox"]), 1)
+        store = self.record(77000)
+        self.assertEqual(len(store["outbox"]), 2)
+        self.assertIn("Wzrost:", store["outbox"][-1]["text"])
+        self.assertNotIn("PROMOCJA", store["outbox"][-1]["text"])
 
     def test_new_sale_after_rebound(self):
         self.record(80000)
@@ -105,13 +113,13 @@ class MonitorTests(unittest.TestCase):
     def test_target_first_read_and_no_repeat(self):
         config = m.Config(Decimal(5), 65000)
         store = self.record(65000, config=config)
-        self.assertIn("Cena alarmowa", store["outbox"][0]["text"])
-        self.assertEqual(len(self.record(65000, config=config)["outbox"]), 1)
+        self.assertEqual(store["outbox"], [])
+        self.assertEqual(self.record(65000, config=config)["outbox"], [])
 
     def test_target_crossing_below_five_percent(self):
         config = m.Config(Decimal(5), 65000)
         self.record(66000, config=config)
-        self.assertEqual(len(self.record(64999, config=config)["outbox"]), 2)
+        self.assertEqual(len(self.record(64999, config=config)["outbox"]), 1)
 
     def test_target_rearms_after_price_above_target(self):
         config = m.Config(Decimal(5), 65000)
@@ -122,12 +130,12 @@ class MonitorTests(unittest.TestCase):
     def test_target_further_lower_price(self):
         config = m.Config(Decimal(5), 65000)
         self.record(64000, config=config)
-        self.assertEqual(len(self.record(63900, config=config)["outbox"]), 2)
+        self.assertEqual(len(self.record(63900, config=config)["outbox"]), 1)
 
     def test_target_configuration_change(self):
         self.record(65000)
         config = m.Config(Decimal(5), 65000)
-        self.assertEqual(len(self.record(65000, config=config)["outbox"]), 2)
+        self.assertEqual(self.record(65000, config=config)["outbox"], [])
 
     def test_promotion_reports_unavailable_honestly(self):
         self.record(80000)
@@ -136,7 +144,7 @@ class MonitorTests(unittest.TestCase):
     def test_back_in_stock_at_target(self):
         config = m.Config(Decimal(5), 65000)
         self.record(65000, False, config=config)
-        self.assertEqual(len(self.record(65000, True, config=config)["outbox"]), 2)
+        self.assertEqual(self.record(65000, True, config=config)["outbox"], [])
 
     def test_every_successful_check_is_in_csv(self):
         self.record(70000)
@@ -167,6 +175,7 @@ class MonitorTests(unittest.TestCase):
 
     def test_delivery_success_deduplicated_across_restarts(self):
         self.record(80000)
+        self.record(76000)
         sender = Mock(return_value=123)
         m.deliver(self.directory, sender=sender)
         m.deliver(self.directory, sender=sender)
@@ -175,6 +184,7 @@ class MonitorTests(unittest.TestCase):
 
     def test_definite_failure_remains_pending(self):
         self.record(80000)
+        self.record(76000)
         with self.assertRaises(m.DeliveryError):
             m.deliver(self.directory, sender=Mock(side_effect=m.DeliveryError("HTTP 403")))
         self.assertEqual(m.load_store(self.directory)["outbox"][0]["status"], "pending")
@@ -184,6 +194,7 @@ class MonitorTests(unittest.TestCase):
 
     def test_uncertain_delivery_not_automatically_repeated(self):
         self.record(80000)
+        self.record(76000)
         with self.assertRaises(m.DeliveryError):
             m.deliver(self.directory, sender=Mock(side_effect=m.DeliveryError("timeout", uncertain=True)))
         sender = Mock(return_value=1)
@@ -194,7 +205,8 @@ class MonitorTests(unittest.TestCase):
         sender.assert_called_once()
 
     def test_acknowledge_uncertain_without_resending(self):
-        store = self.record(80000)
+        self.record(80000)
+        store = self.record(76000)
         event = store["outbox"][0]
         event["status"] = "uncertain"
         m.save_store(self.directory, store)

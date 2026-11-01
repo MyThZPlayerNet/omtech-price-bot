@@ -221,26 +221,26 @@ def collect(directory, config, offer, *, timestamp=None):
     stamp = timestamp or now_utc()
     reasons = []
     old_price = previous["price_cents"] if previous else None
-    if old_price is not None:
+    price_changed = old_price is not None and old_price != offer.price_cents
+    promotion = False
+    if price_changed:
         drop = Decimal(old_price - offer.price_cents) * 100 / old_price
-        if offer.price_cents < old_price and drop >= config.drop:
-            reasons.append(f"Obniżka: {drop:.1f}%".replace(".", ","))
-    target_hit = config.target is not None and offer.price_cents <= config.target
-    # A target alert re-arms after an above-target observation. Further lower prices
-    # below target are new offers; unchanged price does not generate repeated alerts.
-    target_new = target_hit and (previous is None or old_price > config.target
-        or offer.price_cents < old_price or previous["target_cents"] != config.target
-        or (previous["available"] is False and offer.available is True))
-    if target_new:
-        reasons.append(f"Cena alarmowa osiągnięta: {euro(config.target)} lub mniej")
+        direction = "Obniżka" if drop > 0 else "Wzrost"
+        reasons.append(f"{direction}: {abs(drop):.1f}%".replace(".", ","))
+        target_hit = config.target is not None and offer.price_cents <= config.target
+        promotion = drop > 0 and (drop >= config.drop or target_hit)
+        if target_hit:
+            reasons.append(f"Cena nie przekracza progu {euro(config.target)}")
     number = len(store["observations"]) + 1
     store["observations"].append({"id": number, "checked_at_utc": stamp,
         "price_cents": offer.price_cents, "available": offer.available,
         "target_cents": config.target})
-    if reasons or previous is None:
-        header = "🔥 PROMOCJA OMTECH K40!" if reasons else "✅ Monitoring OMTech K40 uruchomiony"
+    # Only an observed price transition can create an automatic notification.
+    # First read, stock changes and config changes remain silent.
+    if price_changed:
+        header = "🔥 PROMOCJA OMTECH K40!" if promotion else "🔔 ZMIANA CENY OMTECH K40"
         lines = [header, f"Pomiar: {stamp}", f"Wariant: {VARIANT_ID}"]
-        lines.append(f"Poprzednia cena: {euro(old_price)}" if old_price is not None else "Pierwszy poprawny odczyt — brak poprzedniej ceny.")
+        lines.append(f"Poprzednia cena: {euro(old_price)}")
         lines += [f"Aktualna cena: {euro(offer.price_cents)}", *reasons,
                   f"Status: {availability(offer.available)}", PRODUCT_URL]
         text = "\n".join(lines)

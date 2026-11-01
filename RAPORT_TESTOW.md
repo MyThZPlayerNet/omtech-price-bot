@@ -6,6 +6,8 @@ Na późniejsze życzenie użytkownika bot zawiadamia o każdej rzeczywistej zmi
 
 Po zmianie lokalnie przeszło 39 testów, w tym cicha inicjalizacja, cicha zmiana konfiguracji i dostępności oraz powiadomienie o wzroście. Wynik zapisano w `verification/price-change-tests.txt`. Poniższe wcześniejsze wiadomości inicjalizacyjne są historycznymi dowodami pierwszego wdrożenia; nowa wersja ich nie generuje.
 
+**Potwierdzenie po wdrożeniu:** [uruchomienie nowej wersji zakończone Success](https://github.com/MyThZPlayerNet/omtech-price-bot/actions/runs/41339184803), 1 listopada 2026 o 19:56 czasu polskiego. Wszystkie **41 testów** przeszły na GitHub Actions. Rzeczywisty pomiar 699,99 EUR został dopisany do historii jako trzeci wiersz danych, a kolejka wciąż zawierała tylko dawną wiadomość o statusie sent — **nie utworzono i nie wysłano nowej wiadomości przy stałej cenie**.
+
 ## Wykonane lokalnie
 
 | Kontrola | Wynik |
@@ -66,6 +68,6 @@ Repozytorium wskazane przez użytkownika: https://github.com/MyThZPlayerNet/omte
 
 **Sekrety są dodane, test Telegrama oraz pierwszy produkcyjny check zakończyły się powodzeniem.** Historia zawiera rzeczywiste odczyty; nie zapisano sztucznych cen.
 
-Do końcowego ZIP-a dołączono kopię dwóch rzeczywistych odczytów i stanu wysyłki z repozytorium. To migawka z momentu przygotowania paczki; aktualna historia będzie rosła na GitHubie. Kopia nie zawiera tokenu ani identyfikatora prywatnego czatu.
+Do zaktualizowanego ZIP-a dołączono kopię trzech rzeczywistych odczytów i stanu wysyłki z repozytorium. To migawka z momentu przygotowania paczki; aktualna historia będzie rosła na GitHubie. Kopia nie zawiera tokenu ani identyfikatora prywatnego czatu.
 
 Harmonogram jest aktywny, ale nie obserwowano jeszcze pierwszego uruchomienia wyzwolonego przez `schedule`. Następny termin według cron to **1 listopada 2026 około 21:17 czasu polskiego**, z możliwym opóźnieniem lub pominięciem przez GitHub. Weryfikacja ręcznych uruchomień nie jest dowodem punktualności przyszłego harmonogramu.

@@ -1,0 +1,11 @@
+{
+  "commit_tested": "9a2e54b6ae48c38e71ff3c0561c6d0b058b41c7e",
+  "run_url": "https://github.com/MyThZPlayerNet/omtech-price-bot/actions/runs/41339184803",
+  "conclusion": "success",
+  "tests_passed": 41,
+  "checked_at_utc": "2026-11-01T18:56:52+00:00",
+  "price_eur": "699.99",
+  "observations_after_check": 3,
+  "new_alerts_at_unchanged_price": 0,
+  "notification_policy": "Every observed price change, up or down; silent initialization, unchanged price, availability-only and config-only changes"
+}

@@ -1,5 +1,9 @@
 # Raport weryfikacji — 1 listopada 2026
 
+## Aktualizacja częstotliwości
+
+Na kolejne życzenie użytkownika harmonogram przyspieszono z 2 godzin do **10 minut**: `7,17,27,37,47,57 * * * *`. Powiadomienia nadal powstają wyłącznie przy zmianie ceny. Konfigurację sprawdzono walidatorem actionlint; rzeczywistych odstępów nowego harmonogramu jeszcze nie obserwowano. Poniższe wzmianki o 21:17 odnoszą się do wcześniejszego harmonogramu i nie są już aktualnym terminem następnej kontroli.
+
 ## Aktualizacja: wiadomości tylko po zmianie ceny
 
 Na późniejsze życzenie użytkownika bot zawiadamia o każdej rzeczywistej zmianie ceny (spadku lub wzroście, również poniżej 5%). Pierwszy odczyt, ta sama cena, sama zmiana dostępności lub progów nie tworzą wiadomości. Progi 5% i 650 EUR jedynie wyróżniają promocje. Ręczny tryb test pozostaje dostępny na żądanie.
@@ -64,10 +68,10 @@ Do odtworzenia: `python -m unittest discover -s tests -v`, `python monitor.py --
 
 ## Stan wdrożenia
 
-Repozytorium wskazane przez użytkownika: https://github.com/MyThZPlayerNet/omtech-price-bot (widoczność Public w momencie sprawdzenia). **Kod, workflow i dokumentacja zostały wgrane do main; Actions są aktywne.** Harmonogram zapisano jako `17 */2 * * *` (UTC).
+Repozytorium wskazane przez użytkownika: https://github.com/MyThZPlayerNet/omtech-price-bot (widoczność Public w momencie sprawdzenia). **Kod, workflow i dokumentacja zostały wgrane do main; Actions są aktywne.** Aktualny harmonogram to `7,17,27,37,47,57 * * * *` (co 10 minut).
 
 **Sekrety są dodane, test Telegrama oraz pierwszy produkcyjny check zakończyły się powodzeniem.** Historia zawiera rzeczywiste odczyty; nie zapisano sztucznych cen.
 
 Do zaktualizowanego ZIP-a dołączono kopię trzech rzeczywistych odczytów i stanu wysyłki z repozytorium. To migawka z momentu przygotowania paczki; aktualna historia będzie rosła na GitHubie. Kopia nie zawiera tokenu ani identyfikatora prywatnego czatu.
 
-Harmonogram jest aktywny, ale nie obserwowano jeszcze pierwszego uruchomienia wyzwolonego przez `schedule`. Następny termin według cron to **1 listopada 2026 około 21:17 czasu polskiego**, z możliwym opóźnieniem lub pominięciem przez GitHub. Weryfikacja ręcznych uruchomień nie jest dowodem punktualności przyszłego harmonogramu.
+Harmonogram jest aktywny, ale nie obserwowano jeszcze pierwszego uruchomienia wyzwolonego przez `schedule`. Kontrole są zaplanowane co 10 minut, z możliwym opóźnieniem lub pominięciem przez GitHub. Weryfikacja ręcznych uruchomień nie jest dowodem punktualności przyszłego harmonogramu.

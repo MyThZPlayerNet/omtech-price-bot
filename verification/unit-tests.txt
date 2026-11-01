@@ -1,0 +1,44 @@
+test_access_denied_is_not_retried (test_monitor.MonitorTests.test_access_denied_is_not_retried) ... ok
+test_acknowledge_uncertain_without_resending (test_monitor.MonitorTests.test_acknowledge_uncertain_without_resending) ... ok
+test_availability_missing_is_unknown (test_monitor.MonitorTests.test_availability_missing_is_unknown) ... ok
+test_back_in_stock_at_target (test_monitor.MonitorTests.test_back_in_stock_at_target) ... ok
+test_bad_offer_does_not_modify_history (test_monitor.MonitorTests.test_bad_offer_does_not_modify_history) ... ok
+test_below_five_percent (test_monitor.MonitorTests.test_below_five_percent) ... ok
+test_config_validation_and_comma (test_monitor.MonitorTests.test_config_validation_and_comma) ... ok
+test_corrupt_store_never_resets (test_monitor.MonitorTests.test_corrupt_store_never_resets) ... ok
+test_definite_failure_remains_pending (test_monitor.MonitorTests.test_definite_failure_remains_pending) ... ok
+test_delivery_success_deduplicated_across_restarts (test_monitor.MonitorTests.test_delivery_success_deduplicated_across_restarts) ... ok
+test_each_qualifying_drop (test_monitor.MonitorTests.test_each_qualifying_drop) ... ok
+test_every_successful_check_is_in_csv (test_monitor.MonitorTests.test_every_successful_check_is_in_csv) ... ok
+test_exact_five_percent (test_monitor.MonitorTests.test_exact_five_percent) ... ok
+test_exact_variant_not_product_minimum (test_monitor.MonitorTests.test_exact_variant_not_product_minimum) ... ok
+test_fetch_currency_and_product_share_session (test_monitor.MonitorTests.test_fetch_currency_and_product_share_session) ... ok
+test_fetch_currency_failure_does_not_request_price (test_monitor.MonitorTests.test_fetch_currency_failure_does_not_request_price) ... ok
+test_initialization_is_not_promotion (test_monitor.MonitorTests.test_initialization_is_not_promotion) ... ok
+test_invalid_availability (test_monitor.MonitorTests.test_invalid_availability) ... ok
+test_invalid_html_json_size_and_redirect (test_monitor.MonitorTests.test_invalid_html_json_size_and_redirect) ... ok
+test_long_retry_after_stops (test_monitor.MonitorTests.test_long_retry_after_stops) ... ok
+test_missing_store_with_history_fails (test_monitor.MonitorTests.test_missing_store_with_history_fails) ... ok
+test_network_failure_exhausts_three_attempts (test_monitor.MonitorTests.test_network_failure_exhausts_three_attempts) ... ok
+test_new_sale_after_rebound (test_monitor.MonitorTests.test_new_sale_after_rebound) ... ok
+test_no_credentials_fails_before_collecting (test_monitor.MonitorTests.test_no_credentials_fails_before_collecting) ... ok
+test_previous_observation_not_high_water_mark (test_monitor.MonitorTests.test_previous_observation_not_high_water_mark) ... ok
+test_promotion_reports_unavailable_honestly (test_monitor.MonitorTests.test_promotion_reports_unavailable_honestly) ... ok
+test_rate_limit_respects_retry_after (test_monitor.MonitorTests.test_rate_limit_respects_retry_after) ... ok
+test_reject_invalid_prices (test_monitor.MonitorTests.test_reject_invalid_prices) ... ok
+test_reject_wrong_currency_or_product (test_monitor.MonitorTests.test_reject_wrong_currency_or_product) ... ok
+test_same_price_and_increase_no_duplicate (test_monitor.MonitorTests.test_same_price_and_increase_no_duplicate) ... ok
+test_target_configuration_change (test_monitor.MonitorTests.test_target_configuration_change) ... ok
+test_target_crossing_below_five_percent (test_monitor.MonitorTests.test_target_crossing_below_five_percent) ... ok
+test_target_first_read_and_no_repeat (test_monitor.MonitorTests.test_target_first_read_and_no_repeat) ... ok
+test_target_further_lower_price (test_monitor.MonitorTests.test_target_further_lower_price) ... ok
+test_target_rearms_after_price_above_target (test_monitor.MonitorTests.test_target_rearms_after_price_above_target) ... ok
+test_telegram_timeout_hides_token_and_is_uncertain (test_monitor.MonitorTests.test_telegram_timeout_hides_token_and_is_uncertain) ... ok
+test_transient_get_retries_then_success (test_monitor.MonitorTests.test_transient_get_retries_then_success) ... ok
+test_uncertain_delivery_not_automatically_repeated (test_monitor.MonitorTests.test_uncertain_delivery_not_automatically_repeated) ... ok
+test_wrong_or_duplicate_variant (test_monitor.MonitorTests.test_wrong_or_duplicate_variant) ... ok
+
+----------------------------------------------------------------------
+Ran 39 tests in 0.718s
+
+OK

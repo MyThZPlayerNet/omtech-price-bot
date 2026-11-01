@@ -1,0 +1,97 @@
+name: Monitor OMTech K40
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check = pomiar; test = Telegram; fetch = odczyt; retry = ponów niepewne (ryzyko duplikatu); acknowledge = potwierdź odbiór'
+        type: choice
+        default: check
+        options:
+          - check
+          - test
+          - fetch
+          - retry
+          - acknowledge
+      alert_id:
+        description: 'Tylko acknowledge: ID alertu odczytane z Telegrama lub data/store.json'
+        type: string
+        default: ''
+  schedule:
+    - cron: '17 */2 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omtech-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      MODE: ${{ inputs.mode || 'check' }}
+      PYTHONUTF8: '1'
+      ALERT_ID: ${{ inputs.alert_id }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Testy logiki i błędów
+        run: python -m unittest discover -s tests -v
+      - name: Test Telegrama
+        if: env.MODE == 'test'
+        run: python monitor.py --mode test
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Rzeczywisty odczyt bez zapisu i bez Telegrama
+        if: env.MODE == 'fetch'
+        run: python monitor.py --mode fetch
+      - name: Pobierz i zapisz pomiar oraz kolejkę
+        id: collect
+        if: env.MODE == 'check'
+        run: python monitor.py --mode collect
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Utrwal dane przed wysyłką
+        id: before
+        if: env.MODE == 'check' || env.MODE == 'retry' || env.MODE == 'acknowledge'
+        run: python scripts/persist.py
+      - name: Wyślij oczekujące alerty
+        if: env.MODE == 'check' && steps.before.outcome == 'success'
+        run: python monitor.py --mode deliver
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Świadomie ponów niepewne alerty
+        if: env.MODE == 'retry' && steps.before.outcome == 'success'
+        run: python monitor.py --mode retry
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Potwierdź otrzymany alert bez ponownej wysyłki
+        if: env.MODE == 'acknowledge' && steps.before.outcome == 'success'
+        run: python monitor.py --mode acknowledge --alert-id "$ALERT_ID"
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Utrwal wyniki wysyłki także po błędzie Telegrama
+        if: always() && steps.before.outcome == 'success' && (env.MODE == 'check' || env.MODE == 'retry' || env.MODE == 'acknowledge')
+        run: python scripts/persist.py
+      - name: Kopia ratunkowa po błędzie (nie zastępuje zapisu Git)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omtech-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: data/
+          retention-days: 7
+          if-no-files-found: ignore

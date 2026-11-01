@@ -1,0 +1,39 @@
+test_persist_to_remote_and_no_empty_commit (test_persist.PersistenceTests.test_persist_to_remote_and_no_empty_commit) ... FAIL
+test_rebase_over_concurrent_readme_edit (test_persist.PersistenceTests.test_rebase_over_concurrent_readme_edit) ... FAIL
+
+======================================================================
+FAIL: test_persist_to_remote_and_no_empty_commit (test_persist.PersistenceTests.test_persist_to_remote_and_no_empty_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<USER_HOME>\Documents\Codex\2026-11-01\chc-eby-stworzy-skonfigurowa-i-w\outputs\omtech-price-bot\tests\test_persist.py", line 24, in setUp
+    self.run_git(self.root, "clone", remote_url, self.client.as_posix())
+  File "<USER_HOME>\Documents\Codex\2026-11-01\chc-eby-stworzy-skonfigurowa-i-w\outputs\omtech-price-bot\tests\test_persist.py", line 37, in run_git
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 128 != 0 : Cloning into '<USER_HOME>/Documents/Codex/2026-11-01/chc-eby-stworzy-skonfigurowa-i-w/work/test-temp/tmp98pxg84b/client'...
+      0 [main] sh (4900) C:\Program Files\Git\usr\bin\sh.exe: *** fatal error - NtCreateDirectoryObject(\BaseNamedObjects\msys-2.0S5-1888ae32e00d56aa): 0xC0000022
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+
+======================================================================
+FAIL: test_rebase_over_concurrent_readme_edit (test_persist.PersistenceTests.test_rebase_over_concurrent_readme_edit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<USER_HOME>\Documents\Codex\2026-11-01\chc-eby-stworzy-skonfigurowa-i-w\outputs\omtech-price-bot\tests\test_persist.py", line 24, in setUp
+    self.run_git(self.root, "clone", remote_url, self.client.as_posix())
+  File "<USER_HOME>\Documents\Codex\2026-11-01\chc-eby-stworzy-skonfigurowa-i-w\outputs\omtech-price-bot\tests\test_persist.py", line 37, in run_git
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 128 != 0 : Cloning into '<USER_HOME>/Documents/Codex/2026-11-01/chc-eby-stworzy-skonfigurowa-i-w/work/test-temp/tmpagk6ba9i/client'...
+      0 [main] sh (33216) C:\Program Files\Git\usr\bin\sh.exe: *** fatal error - NtCreateDirectoryObject(\BaseNamedObjects\msys-2.0S5-1888ae32e00d56aa): 0xC0000022
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.954s
+
+FAILED (failures=2)

@@ -1,0 +1,24 @@
+{
+  "unit-tests": {
+    "exit_code": 0
+  },
+  "git-integration": {
+    "exit_code": 1
+  },
+  "workflow-lint": {
+    "exit_code": 0
+  },
+  "live-fetch": {
+    "exit_code": 0,
+    "offer": {
+      "checked_at_utc": "2026-11-01T18:34:18+00:00",
+      "variant_id": "43552694304950",
+      "price_eur": "699.99",
+      "currency": "EUR",
+      "available": true,
+      "variant_title": "Maschine + 6 Acrylplatten geschenkt / Ohne LightBurn",
+      "source": "https://de.omtech.com/products/k40-lasercutter-graviermaschine.js"
+    }
+  },
+  "source_archive_sha256": "4613a02594f07d89780a81417f0fc686685b006030b6ddde83ce8205722df8c6"
+}

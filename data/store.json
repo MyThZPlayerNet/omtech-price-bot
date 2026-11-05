@@ -114,6 +114,13 @@
       "price_cents": 69999,
       "available": true,
       "target_cents": 65000
+    },
+    {
+      "id": 17,
+      "checked_at_utc": "2026-11-05T11:06:42+00:00",
+      "price_cents": 69999,
+      "available": true,
+      "target_cents": 65000
     }
   ],
   "outbox": [
